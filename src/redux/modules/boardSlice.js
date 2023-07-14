@@ -34,8 +34,26 @@ export const boardSlice = createSlice({
         state[index] = action.payload;
       }
     },
+    searchResult: (state, action) => {
+      const searchText = action.payload;
+      state.searchResult = state.board.filter(
+        (item) =>
+          item.title.includes(searchText) || item.contents.includes(searchText)
+      );
+    },
   },
 });
+
+export const {
+  fetchData,
+  addPost,
+  deletePost,
+  bookmarkPost,
+  updatePost,
+  searchResult,
+} = boardSlice.actions;
+
+export default boardSlice.reducer;
 
 // Thunk function to fetch data using Axios
 export const loadData = () => async (dispatch) => {
@@ -77,7 +95,7 @@ export const deleteData = (id) => async (dispatch) => {
   }
 };
 
-// Thuck function to switch bookmark status- data using Axios
+// Thuck function to switch bookmark data using Axios
 // ***is not working yet
 export const switchBookmark = (id, data) => async (dispatch) => {
   try {
@@ -88,6 +106,12 @@ export const switchBookmark = (id, data) => async (dispatch) => {
   }
 };
 
-export const { fetchData, addPost, deletePost, bookmarkPost, updatePost } =
-  boardSlice.actions;
-export default boardSlice.reducer;
+// search
+export const searchData = (searchText) => async (dispatch) => {
+  try {
+    const response = await api.get(`/posts/search?query=${searchText}`);
+    dispatch(searchResult(response.data));
+  } catch (error) {
+    console.log("Error Searching Data:", error);
+  }
+};
