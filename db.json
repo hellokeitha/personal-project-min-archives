@@ -1,0 +1,67 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "userName": "name 1",
+      "title": "제목 1",
+      "contents": "내용 1",
+      "category": "카테고리 1",
+      "bookmark": true,
+      "isDeleted": false
+    },
+    {
+      "id": 2,
+      "userName": "name 2",
+      "title": "제목 2",
+      "contents": "내용 2",
+      "category": "카테고리 2",
+      "bookmark": false,
+      "isDeleted": false
+    },
+    {
+      "id": 3,
+      "userName": "name 3",
+      "title": "제목 333",
+      "contents": "컨텐츠 333",
+      "category": [
+        "category 3"
+      ],
+      "bookmark": false,
+      "isDeleted": false
+    }
+  ],
+  "users": [
+    {
+      "userId": "shortid()",
+      "email": "aaa@gmail.com",
+      "pw": 1234,
+      "name": "userName 1",
+      "major": "major 1",
+      "intro": "hi, good to see you."
+    },
+    {
+      "userId": "shortid()",
+      "email": "bbb@gmail.com",
+      "pw": 1234,
+      "name": "userName 2",
+      "major": "major 2",
+      "intro": "hi, good to see you."
+    },
+    {
+      "userId": "shortid()",
+      "email": "ccc@gmail.com",
+      "pw": 1234,
+      "name": "userName 3",
+      "major": "major 3",
+      "intro": "hi, good to see you."
+    },
+    {
+      "userId": "shortid()",
+      "email": "ddd@gmail.com",
+      "pw": 1234,
+      "name": "userName 4",
+      "major": "major 4",
+      "intro": "hi, good to see you."
+    }
+  ]
+}
