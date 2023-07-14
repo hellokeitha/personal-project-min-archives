@@ -32,7 +32,7 @@ const MyPage = () => {
     fetchSavedData();
   }, []);
 
-  // 데이터를 아직 불러오지 않았을 때 로딩 상태를 표시합니다.
+  // 비동기함수; 데이터를 아직 불러오지 않았을 때 로딩 상태를 표시합니다.
   if (!savedPosts) {
     return <div>Loading...</div>;
   }

@@ -2,9 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import api from "../axios/api";
 import { useNavigate } from "react-router-dom";
 import useInput from "../axios/hooks/useInput";
+import { useDispatch } from "react-redux";
+import { createData } from "../redux/modules/boardSlice";
 
 const Write = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const titleRef = useRef("");
   const contentRef = useRef("");
@@ -30,36 +33,38 @@ const Write = () => {
     console.log(data);
   };
 
-  // 새롭게 생성하는 게시글 관리 state
-  // const [inputValue, setInputValue] = useState({
-  //   id: v4(),
-  //   title: "",
-  //   userName: "",
-  //   contents: "",
-  //   category: "",
-  //   bookmark: false,
-  //   isDeleted: false,
-  // });
-
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  // ★추가 함수★
+  // 추가 함수
   // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장
-  const onSubmitHandler = async () => {
-    // api.post("/posts", inputValue);
-    api.post("/posts", {
-      id: "",
-      title,
-      contents,
-      category,
-      bookmark: false,
-      isDeleted: false,
-    });
+  const onSubmitHandler = () => {
+    dispatch(
+      createData({
+        id: "",
+        title,
+        contents,
+        category,
+        bookmark: false,
+        isDeleted: false,
+      })
+    );
     fetchPosts();
     navigate("/");
   };
+  // const onSubmitHandler = async () => {
+  //   api.post("/posts", {
+  //     id: "",
+  //     title,
+  //     contents,
+  //     category,
+  //     bookmark: false,
+  //     isDeleted: false,
+  //   });
+  //   fetchPosts();
+  //   navigate("/");
+  // };
 
   // 화면이 렌더링 될 때 title에 우선 포커스
   useEffect(() => {
@@ -107,12 +112,6 @@ const Write = () => {
             type="text"
             value={title}
             onChange={onChangeTitleHandler}
-            // onChange={(e) => {
-            //   setTitle(e.target.value);
-            //   // setInputValue({
-            //   //   title: e.target.value,
-            //   // });
-            // }}
             ref={titleRef}
           />
         </div>

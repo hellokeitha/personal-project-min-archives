@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import styled from "styled-components";
-import api from "../axios/api";
 import { Link } from "react-router-dom";
-import { bookmarkPost } from "../redux/modules/boardSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loadData,
+  deleteData,
+  switchBookmark,
+} from "../redux/modules/boardSlice";
 
-const Main = ({ isActive }) => {
-  const [posts, setPosts] = useState(null);
-
-  // hooks
+const Main = () => {
+  // const [posts, setPosts] = useState(null);
+  const data = useSelector((state) => state.board);
   const dispatch = useDispatch();
 
-  // 조회 함수
-  const fetchData = async () => {
-    const { data } = await api.get("/posts");
-    console.log("data 잘 들어오니? ->", data);
-    setPosts(data);
-  };
+  useEffect(() => {
+    // Fetch data when the component mounts
+    dispatch(loadData());
+  }, [dispatch]);
+
+  console.log("data 잘 들어오니? ->", data);
 
   // 검색 함수
   const [inputSearch, setInputSearch] = useState("");
@@ -26,31 +28,24 @@ const Main = ({ isActive }) => {
   const categoryDropdownHandler = (e) => {
     setSelectedCategory(e.target.value);
   };
-
   // ㄴsearch 버튼을 누르면 검색 필터
   // ㄴ하단 Results For < Searched Item >과 관련 태그가 나오게
   const searchBtnClickHanlder = (e) => {
     setInputSearch(e.target.value);
   };
 
-  // ★삭제 함수★
-  const onDeleteButtonClickHandler = async (id) => {
-    api.delete(`/posts/${id}`);
+  // 삭제 함수
+  const onDeleteButtonClickHandler = (id) => {
+    dispatch(deleteData(id));
   };
 
-  // ★수정 함수 -> 게시글 수정 페이지로 이동할 것★
-
-  // ★북마크 상태변경 함수★
-  const switchBookmarkHandler = () => dispatch(bookmarkPost(posts.id));
-  // const switchBookmarkHandler = async (i) => {
-  //   api.patch(`/posts/${i.id}`, {
-  //     bookmark: !i.bookmark,
-  //   });
-  // };
+  // 북마크 상태변경 함수 ***not working yet
+  const switchBookmarkHandler = (id) =>
+    dispatch(switchBookmark({ bookmark: !id.bookmark }));
 
   // data에 있는 내용 불러오는 함수 설정 -> useEffect!
   useEffect(() => {
-    fetchData();
+    loadData();
   }, []);
 
   return (
@@ -82,7 +77,7 @@ const Main = ({ isActive }) => {
       </div>
       <div>
         <StDatalist>
-          {posts?.map((i) => {
+          {data?.map((i) => {
             return (
               <div key={i.id}>
                 <div>{i.title}</div>
@@ -90,7 +85,7 @@ const Main = ({ isActive }) => {
                 <div>{i.userName}</div>
                 <div>{i.category}</div>
                 <div>Bookmark: {i.bookmark.toString()}</div>
-                <button onClick={switchBookmarkHandler}>북마크</button>
+                {/* <button onClick={switchBookmarkHandler}>북마크</button> */}
                 <button onClick={() => onDeleteButtonClickHandler(i.id)}>
                   DELETE
                 </button>

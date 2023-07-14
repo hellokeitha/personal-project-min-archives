@@ -1,59 +1,93 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "../../axios/api";
 
-const initialState = [
-  {
-    id: "",
-    userName: "name 1",
-    title: "제목 1",
-    contents: "내용 1",
-    category: "카테고리 1",
-    bookmark: true,
-    isDeleted: false,
-  },
-  {
-    id: "",
-    userName: "name 2",
-    title: "제목 2",
-    contents: "내용 2",
-    category: "카테고리 2",
-    bookmark: true,
-    isDeleted: false,
-  },
-  {
-    id: "",
-    userName: "name 3",
-    title: "제목 3",
-    contents: "내용 3",
-    category: "카테고리 3",
-    bookmark: true,
-    isDeleted: false,
-  },
-];
+const initialState = [];
 
 export const boardSlice = createSlice({
   name: "board",
   initialState,
   reducers: {
+    fetchData: (state, action) => {
+      return action.payload;
+    },
+
     addPost: (state, action) => {
       state.push(action.payload);
     },
-
     deletePost: (state, action) => {
-      // api.delete(`/posts/${id}`);
       return state.filter((i) => i.id !== action.payload);
     },
+    // ***is not working yet
     bookmarkPost: (state, action) => {
-      return state.map((item) => {
-        if (item.id === action.payload) {
-          return { ...item, bookmark: !item.bookmark };
+      return state.map((i) => {
+        if (i.id === action.payload) {
+          return { ...i, bookmark: !i.bookmark };
         } else {
-          return item;
+          return i;
         }
       });
+    },
+    updatePost: (state, action) => {
+      const { id } = action.payload;
+      const index = state.findIndex((item) => item.id === id);
+      if (index !== -1) {
+        state[index] = action.payload;
+      }
     },
   },
 });
 
-export const { addPost, deletePost, bookmarkPost } = boardSlice.actions;
+// Thunk function to fetch data using Axios
+export const loadData = () => async (dispatch) => {
+  try {
+    const response = await api.get("/posts");
+    dispatch(fetchData(response.data));
+  } catch (error) {
+    // Handle error
+  }
+};
+
+// Thunk function to create data using Axios
+export const createData = (data) => async (dispatch) => {
+  try {
+    const response = await api.post("/posts", data);
+    dispatch(addPost(response.data));
+  } catch (error) {
+    // Handle error
+  }
+};
+
+// Thunk function to update data using Axios
+export const updateData = (id, data) => async (dispatch) => {
+  try {
+    const response = await api.put(`/posts/${id}`, data);
+    dispatch(updatePost(response.data));
+  } catch (error) {
+    // Handle error
+  }
+};
+
+// Thunk function to delete data using Axios
+export const deleteData = (id) => async (dispatch) => {
+  try {
+    await api.delete(`/posts/${id}`);
+    dispatch(deletePost({ id }));
+  } catch (error) {
+    // Handle error
+  }
+};
+
+// Thuck function to switch bookmark status- data using Axios
+// ***is not working yet
+export const switchBookmark = (id, data) => async (dispatch) => {
+  try {
+    const response = await api.patch(`/posts/${id}`, data);
+    dispatch(bookmarkPost(response.data));
+  } catch (error) {
+    // handle error
+  }
+};
+
+export const { fetchData, addPost, deletePost, bookmarkPost, updatePost } =
+  boardSlice.actions;
 export default boardSlice.reducer;

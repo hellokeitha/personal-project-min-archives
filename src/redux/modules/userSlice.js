@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import shortid from "shortid";
 
-// 초기값이 필요
 const initialState = [
   {
     id: shortid.generate(),

@@ -11,18 +11,8 @@
     },
     {
       "id": 2,
-      "userName": "name 2",
-      "title": "제목 2",
-      "contents": "내용 2",
-      "category": "카테고리 2",
-      "bookmark": false,
-      "isDeleted": false
-    },
-    {
-      "id": 3,
-      "userName": "name 3",
-      "title": "제목 333",
-      "contents": "컨텐츠 333",
+      "title": "업데이트",
+      "contents": "업데이트",
       "category": [
         "category 3"
       ],

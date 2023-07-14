@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import api from "../axios/api";
 import { useNavigate, useParams } from "react-router-dom";
 import useInput from "../axios/hooks/useInput";
+import { useDispatch } from "react-redux";
+import { deleteData } from "../redux/modules/boardSlice";
 
 const EditPostPage = () => {
+  // 상태로 foundData 관리
   const [foundData, setFoundData] = useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // useInput: using custom hook
   const [title, onChangeTitleHandler] = useInput();
@@ -44,6 +48,11 @@ const EditPostPage = () => {
     // 카테고리 중복 선택 가능(태그처럼)
   };
 
+  const onDeleteButtonClickHandler = (id) => {
+    dispatch(deleteData(id));
+    navigate("/");
+  };
+
   useEffect(() => {
     if (title.length >= 20) {
       alert("제목은 20자 이내로 작성해주세요.");
@@ -77,11 +86,6 @@ const EditPostPage = () => {
     return <div>Loading...</div>; // 데이터를 아직 불러오지 않았을 때 로딩 상태를 표시
   }
 
-  const onDeleteButtonClickHandler = async (id) => {
-    api.delete(`/posts/${id}`);
-    navigate("/");
-  };
-
   return (
     <>
       <h1>EditPostPage</h1>
@@ -103,10 +107,12 @@ const EditPostPage = () => {
           <option value="category2">category 2</option>
           <option value="category 3">category 3</option>
         </select>
-        <p>Selected Category: {selectedCategory}</p>
+        <p>Selected Category: {foundData.category} </p>
+        <p>New Selected Category: {selectedCategory}</p>
         <div>
           Data Title:
           <input
+            placeholder={foundData.title}
             type="text"
             value={title}
             onChange={onChangeTitleHandler}
@@ -115,6 +121,7 @@ const EditPostPage = () => {
         <div>
           Contents Summary:
           <input
+            placeholder={foundData.contents}
             type="text"
             value={contents}
             onChange={onChangeContentsHandler}
@@ -123,7 +130,7 @@ const EditPostPage = () => {
         {/* 파일 업로드 기능 추가 */}
         {/* <p>Selected File: {selectedFile}</p> */}
         {/* <button>upload file</button> */}
-        <button onClick={onDeleteButtonClickHandler}>Delete</button>
+        <button onClick={() => onDeleteButtonClickHandler(id)}>Delete</button>
         <button type="submit">SAVE</button>
       </form>
     </>
