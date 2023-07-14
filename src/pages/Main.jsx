@@ -12,12 +12,15 @@ import {
 const Main = () => {
   // const [posts, setPosts] = useState(null);
   const data = useSelector((state) => state.board);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     // Fetch data when the component mounts
     dispatch(loadData());
   }, [dispatch]);
+
+  // const loadCurrentData = data;
 
   console.log("data 잘 들어오니? ->", data);
 
@@ -35,13 +38,16 @@ const Main = () => {
   };
 
   // 삭제 함수
-  const onDeleteButtonClickHandler = (id) => {
-    dispatch(deleteData(id));
+  const onDeleteButtonClickHandler = async (id) => {
+    if (window.confirm(`정말 삭제하시겠습니까?`)) {
+      await dispatch(deleteData(id));
+      await dispatch(loadData()); // 삭제 후 새로고침
+    }
   };
 
   // 북마크 상태변경 함수 ***not working yet
-  const switchBookmarkHandler = (id) =>
-    dispatch(switchBookmark({ bookmark: !id.bookmark }));
+  // const switchBookmarkHandler = (id) =>
+  //   dispatch(switchBookmark({ bookmark: !id.bookmark }));
 
   // data에 있는 내용 불러오는 함수 설정 -> useEffect!
   useEffect(() => {

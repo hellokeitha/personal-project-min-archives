@@ -19,9 +19,6 @@ const Write = () => {
   const [category, setCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // 업로드 된 파일 이름 보여주기
-  // const [selectedFile, setSelectedFile] = useState("업로드 된 파일 이름");
-
   const categoryButtonHandler = (e) => {
     setSelectedCategory([...selectedCategory, e.target.value]);
     setCategory([...selectedCategory, e.target.value]);
@@ -39,32 +36,24 @@ const Write = () => {
 
   // 추가 함수
   // 버튼 클릭시, input에 들어있는 값(state)을 이용하여 DB에 저장
+  // 내용을 모두 입력하지 않았을 경우 alert!
   const onSubmitHandler = () => {
-    dispatch(
-      createData({
-        id: "",
-        title,
-        contents,
-        category,
-        bookmark: false,
-        isDeleted: false,
-      })
-    );
+    if (!title || !contents) {
+      return alert("빈칸을 모두 채워주세요.");
+    } else
+      dispatch(
+        createData({
+          id: "",
+          title,
+          contents,
+          category,
+          bookmark: false,
+          isDeleted: false,
+        })
+      );
     fetchPosts();
     navigate("/");
   };
-  // const onSubmitHandler = async () => {
-  //   api.post("/posts", {
-  //     id: "",
-  //     title,
-  //     contents,
-  //     category,
-  //     bookmark: false,
-  //     isDeleted: false,
-  //   });
-  //   fetchPosts();
-  //   navigate("/");
-  // };
 
   // 화면이 렌더링 될 때 title에 우선 포커스
   useEffect(() => {
